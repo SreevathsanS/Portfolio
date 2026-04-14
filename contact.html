@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Contact — Sreevathsan</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
+  <style>
+    body {
+      background: #0a0a0a;
+      color: #fff;
+      font-family: 'DM Mono', monospace;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .form-container {
+      width: 400px;
+      padding: 30px;
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 10px;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #e8c547;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 12px;
+      background: #0a0a0a;
+      border: 1px solid #333;
+      color: white;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #e8c547;
+      border: none;
+      color: black;
+      cursor: pointer;
+    }
+
+    button:hover {
+      opacity: 0.8;
+    }
+
+    .back {
+      display: block;
+      margin-bottom: 10px;
+      color: #aaa;
+      text-decoration: none;
+      font-size: 12px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="form-container">
+
+  <a href="index.html" class="back">← Back to Portfolio</a>
+
+  <h2>Send me a message</h2>
+
+  <form id="contact-form">
+    <input type="text" name="name" placeholder="Your Name" required>
+    <input type="email" name="email" placeholder="Your Email" required>
+    <textarea name="message" rows="4" placeholder="Your Message" required></textarea>
+
+    <button type="submit">Send Message</button>
+  </form>
+
+</div>
+
+<script>
+  (function(){
+    emailjs.init("KEiU7_6SqdO_jfBxY"); // replace
+  })();
+
+  document.getElementById("contact-form").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    emailjs.sendForm("service_20va5s", "template_901b9o6", this)
+      .then(() => {
+        alert("Message sent successfully!");
+        this.reset();
+      }, (error) => {
+        alert("Failed to send message");
+        console.log(error);
+      });
+  });
+</script>
+
+</body>
+</html>

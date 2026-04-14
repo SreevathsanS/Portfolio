@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Projects — Sreevathsan</title>
+
+  <style>
+    body {
+      background: #0a0a0a;
+      color: #f0ece4;
+      font-family: 'DM Mono', monospace;
+      padding: 40px;
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 40px;
+      color: #e8c547;
+    }
+
+    .project {
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 25px;
+      margin-bottom: 30px;
+      background: rgba(255,255,255,0.03);
+      transition: 0.3s;
+    }
+
+    .project:hover {
+      background: rgba(255,255,255,0.06);
+    }
+
+    .project h2 {
+      color: #00ff9f;
+      margin-bottom: 10px;
+    }
+
+    .project p {
+      color: #aaa;
+      line-height: 1.6;
+    }
+
+    .tech {
+      margin-top: 10px;
+    }
+
+    .tech span {
+      border: 1px solid #333;
+      padding: 4px 8px;
+      margin-right: 5px;
+      font-size: 12px;
+    }
+
+    .back {
+      margin-bottom: 20px;
+      display: inline-block;
+      color: #aaa;
+      text-decoration: none;
+    }
+
+    /* BUTTON */
+    .toggle-btn {
+      margin-top: 15px;
+      padding: 8px 15px;
+      background: transparent;
+      border: 1px solid #00f0ff;
+      color: #00f0ff;
+      cursor: pointer;
+    }
+
+    .toggle-btn:hover {
+      background: #00f0ff;
+      color: black;
+    }
+
+    /* GRID LAYOUT */
+    .project-details {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s ease;
+      margin-top: 15px;
+
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .project-details.active {
+      max-height: 1000px;
+    }
+
+    /* BOX */
+    .detail-box {
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 10px;
+      background: rgba(255,255,255,0.02);
+    }
+
+    .detail-box h3 {
+      font-size: 14px;
+      margin-bottom: 8px;
+      color: #e8c547;
+    }
+
+    .detail-img,
+    .detail-video {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border: 1px solid #333;
+    }
+
+    /* MOBILE */
+    @media (max-width: 768px) {
+      .project-details {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* MODAL BACKGROUND */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  justify-content: center;
+  align-items: center;
+}
+
+/* IMAGE */
+.modal-content {
+  max-width: 90%;
+  max-height: 90%;
+  border: 2px solid #00f0ff;
+}
+
+/* CLOSE BUTTON */
+.close-btn {
+  position: absolute;
+  top: 20px;
+  right: 40px;
+  color: white;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+.detail-img {
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.detail-img:hover {
+  transform: scale(1.03);
+}
+  </style>
+
+</head>
+
+<body>
+
+<a href="../index.html" class="back">← Back</a>
+
+<h1>All Projects</h1>
+
+<!-- PROJECT 1 -->
+<div class="project">
+  <h2>Blockchain-Based IPS</h2>
+  <p>
+    A real-time intrusion prevention system integrating machine learning detection
+    with blockchain-based immutable logging.
+  </p>
+
+  <div class="tech">
+    <span>Python</span>
+    <span>FastAPI</span>
+    <span>Blockchain</span>
+    <span>XGBoost</span>
+  </div>
+
+  <button class="toggle-btn" onclick="toggleDetails(this)">
+    View Details ↓
+  </button>
+
+  <div class="project-details">
+
+    <div class="detail-box">
+      <h3>Architecture</h3>
+      <img src="assets/ips/ips-architecture.png" class="detail-img" onclick="openModal(this)">
+    </div>
+
+    <div class="detail-box">
+      <h3>Output Video</h3>
+      <video controls class="detail-video">
+        <source src="assets/ips/ips-demo.mp4" type="video/mp4">
+      </video>
+    </div>
+
+    <div class="detail-box">
+      <h3>Output Screenshot</h3>
+      <img src="assets/ips/ips-output.png" class="detail-img" onclick="openModal(this)">
+    </div>
+
+  </div>
+</div>
+
+<!-- PROJECT 2 -->
+<div class="project">
+  <h2>SpeedCamera</h2>
+  <p>
+    Real-time traffic monitoring system using YOLOv8 and ByteTrack.
+  </p>
+
+  <div class="tech">
+    <span>YOLOv8</span>
+    <span>OpenCV</span>
+    <span>TensorRT</span>
+  </div>
+
+  <button class="toggle-btn" onclick="toggleDetails(this)">
+    View Details ↓
+  </button>
+
+  <div class="project-details">
+
+    <div class="detail-box">
+      <h3>Architecture</h3>
+      <img src="assets/speed/speed-architecture.png" class="detail-img" onclick="openModal(this)">
+    </div>
+
+    <div class="detail-box">
+      <h3>Output Video</h3>
+      <video controls class="detail-video">
+        <source src="assets/speed/speed-demo.mp4" type="video/mp4 ">
+      </video>
+    </div>
+
+    <div class="detail-box">
+      <h3>Output Screenshot</h3>
+      <img src="assets/speed/speed-output.png" class="detail-img" onclick="openModal(this)">
+    </div>
+
+  </div>
+</div>
+
+<!-- PROJECT 3 -->
+<div class="project">
+  <h2>Mini ChatPDF</h2>
+  <p>
+    RAG-based system enabling users to query PDFs using natural language.
+  </p>
+
+  <div class="tech">
+    <span>Python</span>
+    <span>FAISS</span>
+    <span>Ollama</span>
+  </div>
+
+  <button class="toggle-btn" onclick="toggleDetails(this)">
+    View Details ↓
+  </button>
+
+  <div class="project-details">
+
+    <div class="detail-box">
+      <h3>Architecture</h3>
+      <img src="../assets/chatpdf/architecture.png" class="detail-img" onclick="openModal(this)">
+    </div>
+
+    <div class="detail-box">
+      <h3>Output Video</h3>
+      <video controls class="detail-video">
+        <source src="../assets/chatpdf/demo.mp4" type="video/mp4">
+      </video>
+    </div>
+
+    <div class="detail-box">
+      <h3>Output Screenshot</h3>
+      <img src="../assets/chatpdf/output.png" class="detail-img" onclick="openModal(this)">
+    </div>
+
+  </div>
+</div>
+
+<script>
+function toggleDetails(button) {
+  const details = button.nextElementSibling;
+
+  if (details.classList.contains("active")) {
+    details.classList.remove("active");
+    button.innerText = "View Details ↓";
+  } else {
+    details.classList.add("active");
+    button.innerText = "Hide Details ↑";
+  }
+}
+
+function openModal(img) {
+  const modal = document.getElementById("imageModal");
+  const modalImg = document.getElementById("modalImg");
+
+  modal.style.display = "flex";
+  modalImg.src = img.src;
+}
+
+function closeModal() {
+  document.getElementById("imageModal").style.display = "none";
+}
+</script>
+
+<!-- IMAGE MODAL -->
+<div id="imageModal" class="modal" onclick="closeModal()">
+  <span class="close-btn">&times;</span>
+  <img id="modalImg" class="modal-content">
+</div>
+
+</body>
+</html>
