@@ -2,11 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Contact — Sreevathsan</title>
 
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 
   <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
     body {
       background: #0a0a0a;
       color: #fff;
@@ -14,11 +19,14 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
+      padding: 20px;
+      margin: 0;
     }
 
     .form-container {
-      width: 400px;
+      width: 100%;
+      max-width: 420px;
       padding: 30px;
       background: #111;
       border: 1px solid #333;
@@ -26,8 +34,9 @@
     }
 
     h2 {
-      margin-bottom: 20px;
+      margin: 0 0 20px;
       color: #e8c547;
+      font-size: clamp(1.1rem, 5vw, 1.4rem);
     }
 
     input, textarea {
@@ -37,6 +46,19 @@
       background: #0a0a0a;
       border: 1px solid #333;
       color: white;
+      font-family: inherit;
+      font-size: 14px;
+      border-radius: 4px;
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #555;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
     }
 
     button {
@@ -46,6 +68,10 @@
       border: none;
       color: black;
       cursor: pointer;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: bold;
+      border-radius: 4px;
     }
 
     button:hover {
@@ -54,10 +80,20 @@
 
     .back {
       display: block;
-      margin-bottom: 10px;
+      margin-bottom: 16px;
       color: #aaa;
       text-decoration: none;
       font-size: 12px;
+    }
+
+    .back:hover {
+      color: #fff;
+    }
+
+    @media (max-width: 480px) {
+      .form-container {
+        padding: 20px 16px;
+      }
     }
   </style>
 </head>
@@ -74,7 +110,6 @@
     <input type="text" name="name" placeholder="Your Name" required>
     <input type="email" name="email" placeholder="Your Email" required>
     <textarea name="message" rows="4" placeholder="Your Message" required></textarea>
-
     <button type="submit">Send Message</button>
   </form>
 
@@ -82,7 +117,7 @@
 
 <script>
   (function(){
-    emailjs.init("KEiU7_6SqdO_jfBxY"); // replace
+    emailjs.init("KEiU7_6SqdO_jfBxY");
   })();
 
   document.getElementById("contact-form").addEventListener("submit", function(e) {
