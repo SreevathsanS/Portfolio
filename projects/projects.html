@@ -1,320 +1,476 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Projects — Sreevathsan</title>
-
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,300&display=swap" rel="stylesheet" />
   <style>
-    *, *::before, *::after {
-      box-sizing: border-box;
+    :root { --transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+
+    [data-theme="dark"] {
+      --bg: #0a0a0a; --bg2: #111111; --bg3: #181818;
+      --border: rgba(255,255,255,0.08);
+      --text: #f0ece4; --text-muted: #888; --text-dim: #555;
+      --accent: #e8c547; --accent2: #e05a3a; --accent3: #4ec9b0;
+      --card-bg: rgba(255,255,255,0.03); --card-hover: rgba(255,255,255,0.06);
+      --noise: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    }
+    [data-theme="light"] {
+      --bg: #f5f0e8; --bg2: #ede8df; --bg3: #e4dfd6;
+      --border: rgba(0,0,0,0.1);
+      --text: #1a1510; --text-muted: #6b6158; --text-dim: #aaa098;
+      --accent: #c0392b; --accent2: #2c7a5a; --accent3: #1a5276;
+      --card-bg: rgba(0,0,0,0.03); --card-hover: rgba(0,0,0,0.06);
+      --noise: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    }
+    [data-theme="terminal"] {
+      --bg: #050f05; --bg2: #0a180a; --bg3: #0f200f;
+      --border: rgba(0,255,70,0.15);
+      --text: #a8ff80; --text-muted: #4a8a40; --text-dim: #2a5228;
+      --accent: #00ff41; --accent2: #ffff00; --accent3: #00ffff;
+      --card-bg: rgba(0,255,70,0.03); --card-hover: rgba(0,255,70,0.07);
+      --noise: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
     }
 
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
     body {
-      background: #0a0a0a;
-      color: #f0ece4;
-      font-family: 'DM Mono', monospace;
-      padding: 20px;
-      margin: 0;
+      background: var(--bg); color: var(--text);
+      font-family: 'DM Mono', monospace; font-size: 14px; line-height: 1.7;
+      min-height: 100vh;
+      transition: background var(--transition), color var(--transition);
+      overflow-x: hidden;
+    }
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background-image: var(--noise); pointer-events: none; z-index: 0;
     }
 
-    h1 {
-      font-size: clamp(1.8rem, 6vw, 3rem);
-      margin-bottom: 40px;
-      color: #e8c547;
+    * { cursor: none !important; }
+    #cursor {
+      position: fixed; width: 10px; height: 10px;
+      background: var(--accent); border-radius: 50%;
+      pointer-events: none; z-index: 9999;
+      transition: transform 0.1s, opacity 0.3s;
+      mix-blend-mode: difference;
+    }
+    #cursor-ring {
+      position: fixed; width: 32px; height: 32px;
+      border: 1px solid var(--accent); border-radius: 50%;
+      pointer-events: none; z-index: 9998;
+      transition: all 0.12s ease-out; opacity: 0.5;
     }
 
-    .project {
-      border: 1px solid rgba(255,255,255,0.08);
-      padding: 20px;
-      margin-bottom: 30px;
-      background: rgba(255,255,255,0.03);
-      transition: 0.3s;
-    }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
 
-    .project:hover {
-      background: rgba(255,255,255,0.06);
-    }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 1; }
 
-    .project h2 {
-      color: #00ff9f;
-      margin-bottom: 10px;
-      font-size: clamp(1rem, 4vw, 1.4rem);
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 1.2rem 0; background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(20px);
+      transition: background var(--transition), border-color var(--transition);
     }
+    .nav-inner { display: flex; justify-content: space-between; align-items: center; }
+    .nav-logo {
+      font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.1rem;
+      letter-spacing: -0.02em; color: var(--text); text-decoration: none;
+    }
+    .nav-logo span { color: var(--accent); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
+    .nav-links a {
+      color: var(--text-muted); text-decoration: none; font-size: 0.78rem;
+      letter-spacing: 0.08em; text-transform: uppercase; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--accent); }
 
-    .project p {
-      color: #aaa;
-      line-height: 1.6;
-      margin: 0 0 10px;
+    .theme-switcher {
+      display: flex; gap: 0.4rem; background: var(--bg3);
+      border: 1px solid var(--border); border-radius: 40px; padding: 0.25rem;
     }
+    .theme-btn {
+      background: none; border: none; border-radius: 40px;
+      padding: 0.3rem 0.7rem; font-size: 0.7rem;
+      font-family: 'DM Mono', monospace; color: var(--text-dim);
+      transition: all 0.2s; letter-spacing: 0.05em; text-transform: uppercase;
+    }
+    .theme-btn.active { background: var(--accent); color: var(--bg); font-weight: 600; }
+    .theme-btn:hover:not(.active) { color: var(--text); }
 
-    .tech {
-      margin-top: 10px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
+    .page-header { padding: 8rem 0 4rem; border-bottom: 1px solid var(--border); }
+    .page-eyebrow {
+      font-size: 0.68rem; letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 1rem;
+      display: flex; align-items: center; gap: 0.8rem;
     }
+    .page-eyebrow::before { content: ''; display: inline-block; width: 2rem; height: 1px; background: var(--accent); }
+    .page-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 800; letter-spacing: -0.04em; line-height: 0.95; margin-bottom: 1.2rem;
+    }
+    .page-title em { font-family: 'Fraunces', serif; font-style: italic; color: var(--accent); font-weight: 300; }
+    .page-subtitle { color: var(--text-muted); font-size: 0.88rem; max-width: 500px; line-height: 1.8; }
+    .back-link {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      color: var(--text-muted); text-decoration: none; font-size: 0.75rem;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      transition: color 0.2s; margin-bottom: 2rem;
+    }
+    .back-link:hover { color: var(--accent); }
 
-    .tech span {
-      border: 1px solid #333;
-      padding: 4px 8px;
-      font-size: 12px;
-    }
+    .projects-list { padding: 4rem 0; }
 
-    .back {
-      margin-bottom: 20px;
-      display: inline-block;
-      color: #aaa;
-      text-decoration: none;
-      font-size: 14px;
+    .project-card {
+      background: var(--card-bg); border: 1px solid var(--border);
+      margin-bottom: 2px; padding: 2.5rem 3rem;
+      position: relative; overflow: hidden;
+      transition: background 0.3s;
     }
+    .project-card::before {
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+      width: 0; background: var(--accent); transition: width 0.3s;
+    }
+    .project-card:hover::before { width: 3px; }
+    .project-card:hover { background: var(--card-hover); }
+
+    .project-card-top {
+      display: grid; grid-template-columns: 1fr auto; gap: 2rem; align-items: start;
+    }
+    .project-num {
+      font-family: 'Syne', sans-serif; font-size: 0.7rem; font-weight: 800;
+      color: var(--text-dim); letter-spacing: 0.1em; margin-bottom: 0.8rem;
+    }
+    .project-name {
+      font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 700;
+      letter-spacing: -0.02em; margin-bottom: 0.4rem;
+    }
+    .project-tagline {
+      font-family: 'Fraunces', serif; font-style: italic; font-weight: 300;
+      color: var(--accent2); margin-bottom: 1rem; font-size: 0.9rem;
+    }
+    .project-desc {
+      color: var(--text-muted); font-size: 0.83rem;
+      line-height: 1.8; max-width: 600px; margin-bottom: 1.5rem;
+    }
+    .project-tech { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.5rem; }
+    .tech-tag {
+      padding: 0.2rem 0.6rem; background: var(--bg3);
+      border: 1px solid var(--border); font-size: 0.68rem;
+      color: var(--text-muted); letter-spacing: 0.04em;
+    }
+    .project-link {
+      display: flex; align-items: center; justify-content: center;
+      width: 56px; height: 56px; border: 1px solid var(--border);
+      color: var(--text-muted); text-decoration: none; font-size: 1.2rem;
+      transition: all 0.2s; align-self: flex-start; flex-shrink: 0;
+    }
+    .project-link:hover { border-color: var(--accent); color: var(--accent); background: var(--card-hover); }
 
     .toggle-btn {
-      margin-top: 15px;
-      padding: 8px 15px;
-      background: transparent;
-      border: 1px solid #00f0ff;
-      color: #00f0ff;
-      cursor: pointer;
-      font-family: inherit;
-      font-size: 14px;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.6rem 1.2rem; background: transparent;
+      border: 1px solid var(--border); color: var(--text-muted);
+      font-family: 'DM Mono', monospace; font-size: 0.72rem;
+      letter-spacing: 0.08em; text-transform: uppercase; transition: all 0.2s;
     }
-
-    .toggle-btn:hover {
-      background: #00f0ff;
-      color: black;
-    }
+    .toggle-btn:hover, .toggle-btn.open { border-color: var(--accent); color: var(--accent); }
 
     .project-details {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.5s ease;
-      margin-top: 15px;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
+      max-height: 0; overflow: hidden;
+      transition: max-height 0.55s ease, margin-top 0.3s;
     }
+    .project-details.active { max-height: 2000px; margin-top: 1.5rem; }
 
-    .project-details.active {
-      max-height: 2000px;
+    .details-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      border: 1px solid var(--border);
     }
-
     .detail-box {
-      border: 1px solid rgba(255,255,255,0.08);
-      padding: 10px;
-      background: rgba(255,255,255,0.02);
-      min-width: 0;
+      background: var(--bg3); padding: 1.2rem;
+      border-right: 1px solid var(--border);
     }
-
+    .detail-box:last-child { border-right: none; }
     .detail-box h3 {
-      font-size: 13px;
-      margin: 0 0 8px;
-      color: #e8c547;
+      font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 0.8rem;
+    }
+    .detail-img, .detail-video {
+      width: 100%; height: 180px; object-fit: cover;
+      display: block; border: 1px solid var(--border);
+    }
+    .detail-img { transition: transform 0.3s; }
+    .detail-img:hover { transform: scale(1.02); cursor: zoom-in !important; }
+
+    .modal {
+      display: none; position: fixed; z-index: 9990; inset: 0;
+      background: rgba(0,0,0,0.92); justify-content: center;
+      align-items: center; padding: 20px;
+    }
+    .modal.open { display: flex; }
+    .modal-img {
+      max-width: 90%; max-height: 90vh; object-fit: contain;
+      border: 1px solid var(--accent);
+    }
+    .modal-close {
+      position: absolute; top: 1.5rem; right: 2rem;
+      font-size: 2rem; color: var(--text); line-height: 1;
+      background: none; border: none; font-family: inherit;
     }
 
-    .detail-img,
-    .detail-video {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-      border: 1px solid #333;
-      display: block;
+    .fade-up {
+      opacity: 0; transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    [data-theme="terminal"] .project-name { text-shadow: 0 0 20px rgba(0,255,65,0.2); }
+    [data-theme="terminal"] body::after {
+      content: ''; position: fixed; inset: 0;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.04) 2px, rgba(0,0,0,0.04) 4px);
+      pointer-events: none; z-index: 0;
+    }
+
+    footer {
+      border-top: 1px solid var(--border); padding: 2rem 0;
+      display: flex; justify-content: space-between; align-items: center;
+      color: var(--text-dim); font-size: 0.7rem; letter-spacing: 0.08em;
+      position: relative; z-index: 1;
     }
 
     @media (max-width: 900px) {
-      .project-details {
-        grid-template-columns: repeat(2, 1fr);
-      }
+      .details-grid { grid-template-columns: repeat(2, 1fr); }
+      .detail-box:nth-child(2) { border-right: none; }
+      .detail-box:nth-child(3) { border-top: 1px solid var(--border); border-right: none; grid-column: span 2; }
     }
-
-    @media (max-width: 600px) {
-      body {
-        padding: 16px;
-      }
-
-      .project {
-        padding: 16px;
-      }
-
-      .project-details {
-        grid-template-columns: 1fr;
-      }
-
-      .detail-img,
-      .detail-video {
-        height: 200px;
-      }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .project-card { padding: 1.5rem; }
+      .project-card-top { grid-template-columns: 1fr; }
+      .project-link { display: none; }
+      .details-grid { grid-template-columns: 1fr; }
+      .detail-box { border-right: none !important; border-bottom: 1px solid var(--border); grid-column: span 1 !important; }
+      .detail-box:last-child { border-bottom: none; }
+      footer { flex-direction: column; gap: 0.8rem; text-align: center; }
     }
-
-    /* Modal */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 999;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.9);
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
-
-    .modal-content {
-      max-width: 100%;
-      max-height: 90vh;
-      border: 2px solid #00f0ff;
-      object-fit: contain;
-    }
-
-    .close-btn {
-      position: absolute;
-      top: 16px;
-      right: 24px;
-      color: white;
-      font-size: 30px;
-      cursor: pointer;
-      line-height: 1;
-    }
-
-    .detail-img {
-      cursor: pointer;
-      transition: transform 0.3s;
-    }
-
-    .detail-img:hover {
-      transform: scale(1.03);
+    @media (max-width: 480px) {
+      .container { padding: 0 1rem; }
+      .project-card { padding: 1.2rem; }
+      .theme-btn { padding: 0.3rem 0.5rem; font-size: 0.62rem; }
     }
   </style>
 </head>
-
 <body>
 
-<a href="../index.html" class="back">← Back</a>
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
 
-<h1>All Projects</h1>
-
-<!-- PROJECT 1 -->
-<div class="project">
-  <h2>Blockchain-Based IPS</h2>
-  <p>
-    A real-time intrusion prevention system integrating machine learning detection
-    with blockchain-based immutable logging.
-  </p>
-  <div class="tech">
-    <span>Python</span>
-    <span>FastAPI</span>
-    <span>Blockchain</span>
-    <span>XGBoost</span>
+<nav>
+  <div class="container nav-inner">
+    <a href="../index.html" class="nav-logo">S<span>.</span>Sreevathsan</a>
+    <ul class="nav-links">
+      <li><a href="../index.html#about">About</a></li>
+      <li><a href="../index.html#projects">Projects</a></li>
+      <li><a href="../index.html#experience">Experience</a></li>
+      <li><a href="../contact.html">Contact</a></li>
+    </ul>
+    <div class="theme-switcher">
+      <button class="theme-btn" data-t="dark" onclick="setTheme('dark')">Dark</button>
+      <button class="theme-btn" data-t="light" onclick="setTheme('light')">Light</button>
+      <button class="theme-btn" data-t="terminal" onclick="setTheme('terminal')">Term</button>
+    </div>
   </div>
-  <button class="toggle-btn" onclick="toggleDetails(this)">View Details ↓</button>
-  <div class="project-details">
-    <div class="detail-box">
-      <h3>Architecture</h3>
-      <img src="assets/ips/ips-architecture.png" class="detail-img" onclick="openModal(this)">
-    </div>
-    <div class="detail-box">
-      <h3>Output Video</h3>
-      <video controls class="detail-video">
-        <source src="assets/ips/ips-demo.mp4" type="video/mp4">
-      </video>
-    </div>
-    <div class="detail-box">
-      <h3>Output Screenshot</h3>
-      <img src="assets/ips/ips-output.png" class="detail-img" onclick="openModal(this)">
-    </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <a href="../index.html" class="back-link fade-up">← Back to Portfolio</a>
+    <div class="page-eyebrow fade-up">All Work</div>
+    <h1 class="page-title fade-up">Things I've<br><em>Built.</em></h1>
+    <p class="page-subtitle fade-up">A full collection of projects spanning computer vision, machine learning, backend systems, and applied AI.</p>
   </div>
 </div>
 
-<!-- PROJECT 2 -->
-<div class="project">
-  <h2>SpeedCamera</h2>
-  <p>
-    Real-time traffic monitoring system using YOLOv8 and ByteTrack.
-  </p>
-  <div class="tech">
-    <span>YOLOv8</span>
-    <span>OpenCV</span>
-    <span>TensorRT</span>
-  </div>
-  <button class="toggle-btn" onclick="toggleDetails(this)">View Details ↓</button>
-  <div class="project-details">
-    <div class="detail-box">
-      <h3>Architecture</h3>
-      <img src="assets/speed/speed-architecture.png" class="detail-img" onclick="openModal(this)">
-    </div>
-    <div class="detail-box">
-      <h3>Output Video</h3>
-      <video controls class="detail-video">
-        <source src="assets/speed/speed-demo.mp4" type="video/mp4">
-      </video>
-    </div>
-    <div class="detail-box">
-      <h3>Output Screenshot</h3>
-      <img src="assets/speed/speed-output.png" class="detail-img" onclick="openModal(this)">
-    </div>
-  </div>
-</div>
+<section class="projects-list">
+  <div class="container">
 
-<!-- PROJECT 3 -->
-<div class="project">
-  <h2>Mini ChatPDF</h2>
-  <p>
-    RAG-based system enabling users to query PDFs using natural language.
-  </p>
-  <div class="tech">
-    <span>Python</span>
-    <span>FAISS</span>
-    <span>Ollama</span>
+    <div class="project-card fade-up">
+      <div class="project-card-top">
+        <div>
+          <div class="project-num">Project 01 / 2025</div>
+          <h2 class="project-name">Blockchain-Based IPS</h2>
+          <p class="project-tagline">Immutable Intrusion Prevention with ML Detection</p>
+          <p class="project-desc">A real-time intrusion prevention system integrating machine learning detection with blockchain-based immutable logging. XGBoost classifies network traffic patterns while every alert is cryptographically recorded on-chain for tamper-proof audit trails.</p>
+          <div class="project-tech">
+            <span class="tech-tag">Python</span>
+            <span class="tech-tag">FastAPI</span>
+            <span class="tech-tag">Blockchain</span>
+            <span class="tech-tag">XGBoost</span>
+          </div>
+          <button class="toggle-btn" onclick="toggleDetails(this)">View Details ↓</button>
+        </div>
+        <a href="#" class="project-link">↗</a>
+      </div>
+      <div class="project-details">
+        <div class="details-grid">
+          <div class="detail-box">
+            <h3>Architecture</h3>
+            <img src="assets/ips/ips-architecture.png" class="detail-img" onclick="openModal(this)" alt="Architecture">
+          </div>
+          <div class="detail-box">
+            <h3>Demo Video</h3>
+            <video controls class="detail-video"><source src="assets/ips/ips-demo.mp4" type="video/mp4"></video>
+          </div>
+          <div class="detail-box">
+            <h3>Output</h3>
+            <img src="assets/ips/ips-output.png" class="detail-img" onclick="openModal(this)" alt="Output">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card fade-up">
+      <div class="project-card-top">
+        <div>
+          <div class="project-num">Project 02 / 2025</div>
+          <h2 class="project-name">SpeedCamera</h2>
+          <p class="project-tagline">Real-Time Traffic Violation Detection System</p>
+          <p class="project-desc">A production-grade traffic monitoring pipeline using YOLOv8 for vehicle detection and ByteTrack for multi-object tracking across live CCTV feeds. GPU-accelerated with TensorRT+CUDA for real-time 30+ FPS inference with a live React dashboard.</p>
+          <div class="project-tech">
+            <span class="tech-tag">YOLOv8</span>
+            <span class="tech-tag">OpenCV</span>
+            <span class="tech-tag">TensorRT</span>
+            <span class="tech-tag">CUDA</span>
+            <span class="tech-tag">ByteTrack</span>
+            <span class="tech-tag">FastAPI</span>
+            <span class="tech-tag">React.js</span>
+          </div>
+          <button class="toggle-btn" onclick="toggleDetails(this)">View Details ↓</button>
+        </div>
+        <a href="https://github.com/SreevathsanS/SpeedCamera" target="_blank" class="project-link">↗</a>
+      </div>
+      <div class="project-details">
+        <div class="details-grid">
+          <div class="detail-box">
+            <h3>Architecture</h3>
+            <img src="assets/speed/speed-architecture.png" class="detail-img" onclick="openModal(this)" alt="Architecture">
+          </div>
+          <div class="detail-box">
+            <h3>Demo Video</h3>
+            <video controls class="detail-video"><source src="assets/speed/speed-demo.mp4" type="video/mp4"></video>
+          </div>
+          <div class="detail-box">
+            <h3>Output</h3>
+            <img src="assets/speed/speed-output.png" class="detail-img" onclick="openModal(this)" alt="Output">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card fade-up">
+      <div class="project-card-top">
+        <div>
+          <div class="project-num">Project 03 / 2025</div>
+          <h2 class="project-name">Mini ChatPDF</h2>
+          <p class="project-tagline">RAG-Powered PDF Query System</p>
+          <p class="project-desc">RAG-based system enabling users to query PDFs using natural language. FAISS vector search retrieves semantically relevant chunks, fed to a locally running Mistral model via Ollama for context-aware answers — no cloud API required.</p>
+          <div class="project-tech">
+            <span class="tech-tag">Python</span>
+            <span class="tech-tag">Streamlit</span>
+            <span class="tech-tag">FAISS</span>
+            <span class="tech-tag">Sentence Transformers</span>
+            <span class="tech-tag">Ollama (Mistral)</span>
+          </div>
+          <button class="toggle-btn" onclick="toggleDetails(this)">View Details ↓</button>
+        </div>
+        <a href="https://github.com/SreevathsanS/Chatpdf" target="_blank" class="project-link">↗</a>
+      </div>
+      <div class="project-details">
+        <div class="details-grid">
+          <div class="detail-box">
+            <h3>Architecture</h3>
+            <img src="../assets/chatpdf/architecture.png" class="detail-img" onclick="openModal(this)" alt="Architecture">
+          </div>
+          <div class="detail-box">
+            <h3>Demo Video</h3>
+            <video controls class="detail-video"><source src="../assets/chatpdf/demo.mp4" type="video/mp4"></video>
+          </div>
+          <div class="detail-box">
+            <h3>Output</h3>
+            <img src="../assets/chatpdf/output.png" class="detail-img" onclick="openModal(this)" alt="Output">
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
-  <button class="toggle-btn" onclick="toggleDetails(this)">View Details ↓</button>
-  <div class="project-details">
-    <div class="detail-box">
-      <h3>Architecture</h3>
-      <img src="../assets/chatpdf/architecture.png" class="detail-img" onclick="openModal(this)">
-    </div>
-    <div class="detail-box">
-      <h3>Output Video</h3>
-      <video controls class="detail-video">
-        <source src="../assets/chatpdf/demo.mp4" type="video/mp4">
-      </video>
-    </div>
-    <div class="detail-box">
-      <h3>Output Screenshot</h3>
-      <img src="../assets/chatpdf/output.png" class="detail-img" onclick="openModal(this)">
-    </div>
+</section>
+
+<footer>
+  <div class="container" style="display:flex;justify-content:space-between;align-items:center;width:100%;">
+    <span>© 2026 Sreevathsan S</span>
+    <span>Chennai, India · +91 79047 44925</span>
   </div>
+</footer>
+
+<div id="imageModal" class="modal" onclick="closeModal()">
+  <button class="modal-close" onclick="closeModal()">×</button>
+  <img id="modalImg" class="modal-img">
 </div>
 
 <script>
-function toggleDetails(button) {
-  const details = button.nextElementSibling;
-  if (details.classList.contains("active")) {
-    details.classList.remove("active");
-    button.innerText = "View Details ↓";
-  } else {
-    details.classList.add("active");
-    button.innerText = "Hide Details ↑";
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursor-ring');
+  let mx = -100, my = -100, rx = -100, ry = -100;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx - 5 + 'px';
+    cursor.style.top = my - 5 + 'px';
+  });
+  (function animateRing() {
+    rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+    ring.style.left = rx - 16 + 'px'; ring.style.top = ry - 16 + 'px';
+    requestAnimationFrame(animateRing);
+  })();
+
+  function setTheme(t) {
+    document.documentElement.setAttribute('data-theme', t);
+    document.querySelectorAll('.theme-btn').forEach(b => b.classList.toggle('active', b.dataset.t === t));
+    localStorage.setItem('portfolio-theme', t);
   }
-}
+  setTheme(localStorage.getItem('portfolio-theme') || 'dark');
 
-function openModal(img) {
-  const modal = document.getElementById("imageModal");
-  const modalImg = document.getElementById("modalImg");
-  modal.style.display = "flex";
-  modalImg.src = img.src;
-}
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-up').forEach((el, i) => {
+    el.style.transitionDelay = (i % 4) * 0.08 + 's';
+    observer.observe(el);
+  });
+  setTimeout(() => {
+    document.querySelectorAll('.page-header .fade-up').forEach(el => el.classList.add('visible'));
+  }, 100);
 
-function closeModal() {
-  document.getElementById("imageModal").style.display = "none";
-}
+  function toggleDetails(btn) {
+    const details = btn.closest('.project-card').querySelector('.project-details');
+    const isOpen = details.classList.contains('active');
+    details.classList.toggle('active', !isOpen);
+    btn.classList.toggle('open', !isOpen);
+    btn.textContent = isOpen ? 'View Details ↓' : 'Hide Details ↑';
+  }
+
+  function openModal(img) {
+    document.getElementById('modalImg').src = img.src;
+    document.getElementById('imageModal').classList.add('open');
+  }
+  function closeModal() { document.getElementById('imageModal').classList.remove('open'); }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 </script>
-
-<div id="imageModal" class="modal" onclick="closeModal()">
-  <span class="close-btn">&times;</span>
-  <img id="modalImg" class="modal-content">
-</div>
-
 </body>
 </html>
